@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos con Stock Bajo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .add-product-container {
+            margin: 50px auto;
+            max-width: 800px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        .btn {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="add-product-container">
+        <h2>Productos con Stock Bajo</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio (Bs)</th>
+                    <th>Descripción</th>
+                    <th>Stock</th>
+                    <th>Actualizar Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_bajos %}
+                <tr>
+                    <td>{{ producto[1] }}</td>
+                    <td>{{ producto[2] }}</td>
+                    <td>{{ producto[3] }}</td>
+                    <td>{{ producto[4] }}</td>
+                    <td>
+                        <form action="{{ url_for('productos_bajos') }}" method="POST" style="display: inline-block;">
+                            <input type="hidden" name="producto_id" value="{{ producto[0] }}">
+                            <input type="number" name="nuevo_stock" min="1" required placeholder="Cantidad">
+                            <button type="submit" class="btn btn-success">Actualizar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

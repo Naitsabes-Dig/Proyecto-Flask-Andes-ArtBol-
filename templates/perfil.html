@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://img.freepik.com/fotos-premium/hombre-indigena-boliviano-preparando-artesanias-vender-mercado-paz-que-muestra-cultura-tradiciones-latinoamericanas-concepto-cultura-latinoamericana-artesanias-indigenas-mercado-boliviano-paz_864588-59491.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: rgba(30, 61, 52, 0.9);
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar h1 {
+            font-size: 28px;
+            margin: 0;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            color: #333;
+        }
+
+        .card-header {
+            background-color: rgba(30, 61, 52, 0.9);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .card-header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .form-container form {
+            padding: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .btn {
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary, .btn-success {
+            background-color: rgba(30, 61, 52, 0.9);
+            border-color: rgba(30, 61, 52, 0.9);
+            color: #fff;
+            width: 100%;
+        }
+
+        .btn-primary:hover, .btn-success:hover {
+            background-color: rgba(42, 85, 70, 1);
+            border-color: rgba(42, 85, 70, 1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            background-color: rgba(30, 61, 52, 0.9);
+            color: #fff;
+        }
+
+        .footer a {
+            color: #f0e68c;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 15px;
+            }
+
+            .card-header h3 {
+                font-size: 20px;
+            }
+
+            .btn {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mt-3">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="navbar">
+        <h1>ANDES ARTBOL</h1>
+    </div>
+
+    <div class="container">
+        <div class="form-container">
+            <div class="card-header">
+                <h3>Perfil de Usuario</h3>
+                <p>Actualiza tu información personal</p>
+            </div>
+            <form method="POST" action="{{ url_for('perfil') }}">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario[0] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario[1] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario[2] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="rol_id">Rol:</label>
+                    <select class="form-control" name="rol_id" required>
+                        <option value="" disabled selected>Seleccione un rol</option>
+                        {% for rol in roles %}
+                        <option value="{{ rol[0] }}" {% if usuario[3]==rol[0] %} selected {% endif %}>{{ rol[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comunidad_id">Comunidad:</label>
+                    <select class="form-control" name="comunidad_id" required>
+                        <option value="" disabled selected>Seleccione una comunidad</option>
+                        {% for comunidad in comunidades %}
+                        <option value="{{ comunidad[0] }}" {% if usuario[4]==comunidad[0] %} selected {% endif %}>{{ comunidad[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if usuario[3] == 2 %}
+                <div class="text-center">
+                    <a href="{{ url_for('registrar_vendedor') }}" class="btn btn-success">Registrar mi Tienda</a>
+                </div>
+                {% endif %}
+                <div class="text-center mt-1">
+                    <button type="submit" class="btn btn-success">Actualizar Perfil</button>
+                </div>
+                <div class="text-center mt-1">
+                    <a class="btn btn-success" href="{{ url_for('dashboard') }}">Volver al Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>AndesArtBol &copy; 2024</p>
+        <a href="{{ url_for('politicas') }}">Política de Privacidad</a> | <a href="#">Términos y Condiciones</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura de Pago</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <style>
+        /* Estilos para la factura */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .invoice {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        h1, h2 {
+            margin: 0;
+            color: #1E3D34;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1E3D34;
+            padding-bottom: 10px;
+        }
+
+        .invoice-details p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #1E3D34;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #1E3D34;
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 30px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .invoice {
+                padding: 20px;
+            }
+
+            table th, table td {
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice">
+        <div style="text-align: center;">
+            <!-- Logo desde URL -->
+            <img src="https://drive.google.com/uc?export=view&id=1BbNWXkB98noOjxwobMuMYAVk4QvUYYZz" alt="Logo de la página" class="logo">
+        </div>
+        <h1>Factura de Pago</h1>
+        <h2>Detalles del Pedido</h2>
+        <div class="invoice-details">
+            <p><strong>Fecha:</strong> {{ fecha }}</p>
+            <p><strong>Nombre del Cliente:</strong> {{ nombre }}</p>
+            <p><strong>Correo del Cliente:</strong> {{ correo }}</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto['name'] }}</td>
+                    <td>{{ producto['cantidad'] }}</td>
+                    <td>Bs. {{ "%.2f"|format(producto['price']) }}</td>
+                    <td>Bs. {{ "%.2f"|format(producto['cantidad'] * producto['price']) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="total">Total a Pagar: Bs. {{ "%.2f"|format(total) }}</p>
+
+        <div class="footer">
+            Gracias por tu compra. Si tienes alguna duda, contáctanos a través de nuestro correo de soporte.
+        </div>
+    </div>
+</body>
+
+</html>

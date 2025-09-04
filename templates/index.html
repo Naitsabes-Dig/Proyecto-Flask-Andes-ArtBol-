@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AndesArtBol</title>
+    <meta http-equiv="Content-Language" content="es">
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Estilos base */
+        body {
+            background: linear-gradient(135deg, #1E3D34 30%, #899B9F 100%);
+            color: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #FFDD57;
+            text-decoration: underline;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #1E3D34;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFDD57;
+        }
+
+        .navbar-toggler-icon {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #FFDD57;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background-color: #1E3D34;
+            color: white;
+            padding: 60px 30px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .hero-section h2 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .btn-custom {
+            background-color: #FFDD57;
+            color: white;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #FFD700;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tarjetas de productos */
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .btn-info {
+            background-color: #1E3D34;
+            color: #FFDD57;
+            border-radius: 20px;
+            padding: 8px 20px;
+        }
+
+        .btn-info:hover {
+            background-color: #145027;
+            color: white;
+        }
+
+        /* Pie de página */
+        .footer {
+            background-color: #1E3D34;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        .footer h5 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2);
+            color: #FFDD57;
+        }
+
+        /* Espaciado adicional entre secciones */
+        .section-spacing {
+            padding: 40px 0;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .navbar-brand {
+                font-size: 24px;
+            }
+
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">AndesArtBol</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="bi bi-list"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}">REGISTRO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">INICIAR SESIÓN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('acerca_de_nosotros') }}">ACERCA DE
+                            NOSOTROS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('descargar') }}">DESCARGA</a></li>
+                </ul>
+                <form class="d-flex ms-auto">
+                    <input class="form-control me-2" type="search" placeholder="¿Qué estás buscando?"
+                        aria-label="Search">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container hero-section py-5">
+        <h2 class="text-center text-primary display-4 mb-4">¡Bienvenido a AndesArtBol!</h2>
+        <p class="text-center fs-4 mb-4">
+            En AndesArtBol nos enorgullecemos de ser un puente entre las comunidades artesanales de Bolivia y el
+            resto del mundo. Cada producto que encuentras aquí no es solo un objeto, sino una historia: un reflejo de
+            las
+            raíces culturales, las tradiciones milenarias y la pasión de los artesanos que dedican su vida a mantener
+            vivas sus técnicas ancestrales.
+        </p>
+        <p class="text-center mb-4">
+            Cada pieza disponible en nuestra plataforma está hecha a mano, cuidando cada detalle para garantizar una
+            calidad excepcional. Los materiales utilizados son sostenibles y naturales, obtenidos de manera responsable
+            para proteger el medio ambiente. Nuestros artesanos pertenecen a diversas comunidades que representan la
+            diversidad cultural de Bolivia: desde los altiplanos andinos hasta las selvas tropicales del Amazonas.
+        </p>
+
+        <p class="text-center mb-4">
+            Con cada compra, estás fortaleciendo un movimiento que valora la autenticidad, la diversidad y el desarrollo
+            sostenible.
+        </p>
+
+        <p class="text-center fs-4 mb-4">
+            AndesArtBol es más que una tienda, es un movimiento que celebra la cultura, la tradición y la creatividad de
+            Bolivia. Gracias por ser parte de este viaje con nosotros. ¡Juntos conectamos las manos de Bolivia con el
+            mundo!
+        </p>
+        {% if session.get('usuario_id') %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('carritos') }}" class="btn btn-custom btn-lg">Explorar Productos</a>
+        </div>
+        {% else %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('login') }}" class="btn btn-warning btn-lg text-white">Iniciar Sesión</a>
+            <a href="{{ url_for('registro') }}" class="btn btn-outline-light btn-lg">Registrarse</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Sección de productos -->
+    <div class="container">
+        <h2>Productos Destacados</h2>
+        <div class="row">
+            <!-- Producto 1 -->
+            <div class="col-md-4 product-card">
+                <div class="card">
+                    <img src="https://pymespedia.com/imagenes/la-regulacion-de-los-productos-artesanales-1-1024x690.jpg"
+                        class="card-img-top" alt="Producto 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Producto Artesanal 1</h5>
+                        <p class="card-text">Una obra maestra hecha a mano, perfecta para tu hogar o como regalo.</p>
+                        <a href="#" class="btn-info">Ver Más</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Producto 2 -->
+            <div class="col-md-4 product-card">
+                <div class="card">
+                    <img src="https://media.istockphoto.com/id/1405315769/es/foto/artesan%C3%ADas-ind%C3%ADgenas-marajoara.jpg?s=612x612&w=0&k=20&c=Uasu7eoeY293pOZUwCbH6GE_BXpXtHSbd1yBXI-YoCo="
+                        class="card-img-top" alt="Producto 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Producto Artesanal 2</h5>
+                        <p class="card-text">Hecho por manos bolivianas, lleno de cultura y tradición.</p>
+                        <a href="#" class="btn-info">Ver Más</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Producto 3 -->
+            <div class="col-md-4 product-card">
+                <div class="card">
+                    <img src="https://img.freepik.com/fotos-premium/productos-artesanales-globales-hechos-mano-mercado-cultural-vibrante_38013-108380.jpg"
+                        class="card-img-top" alt="Producto 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Producto Artesanal 3</h5>
+                        <p class="card-text">Exclusivo, único y lleno de historia. Ideal para coleccionistas.</p>
+                        <a href="#" class="btn-info">Ver Más</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilo para normalizar las imágenes del carrusel */
+        #comunidadesCarousel .carousel-inner img {
+            width: 100%;
+            /* Que ocupe el ancho total del contenedor */
+            height: 400px;
+            /* Fijar una altura para todas las imágenes */
+            object-fit: cover;
+            /* Ajustar la imagen sin distorsionarla */
+        }
+
+        #comunidadesCarousel .carousel-inner img {
+            width: 100%;
+            /* Asegura que ocupe todo el ancho del contenedor */
+            height: 400px;
+            /* Altura fija */
+            object-fit: cover;
+            /* Ajuste proporcional sin distorsión */
+        }
+
+        /* Ajustes responsivos para pantallas pequeñas */
+        @media (max-width: 768px) {
+            #comunidadesCarousel .carousel-inner img {
+                height: 250px;
+                /* Reduce la altura en dispositivos pequeños */
+            }
+
+            .carousel-caption h3 {
+                font-size: 1.2rem;
+                /* Reduce el tamaño del título */
+            }
+
+            .carousel-caption p {
+                font-size: 0.9rem;
+                /* Reduce el tamaño del texto */
+            }
+        }
+    </style>
+
+    <div id="comunidadesCarousel" class="carousel slide mt-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Achocalla -->
+            <div class="carousel-item active">
+                <div class="position-relative text-center">
+                    <img src="https://scontent.flpb2-2.fna.fbcdn.net/v/t1.6435-9/133180506_686702748660928_5118993752569608035_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=qg0nFT4UB-AQ7kNvgHr1A9p&_nc_zt=23&_nc_ht=scontent.flpb2-2.fna&_nc_gid=AxaJl2L7YD_5JDiNf92YiVU&oh=00_AYA8K_wd8b8TDG-GrD3RlUHWFfOfhRmqjRQ2-jDRV_pHGg&oe=6769FC1F"
+                        class="d-block w-100 rounded" alt="Achocalla">
+                    <div class="carousel-caption">
+                        <h3 class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Achocalla</h3>
+                        <p class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Achocalla, una pintoresca
+                            comunidad agrícola ubicada en el departamento de La Paz, Bolivia, se encuentra a poca
+                            distancia de la bulliciosa ciudad de El Alto. Este tranquilo municipio es reconocido por su
+                            belleza natural, paisajes verdes y su laguna principal, que es un punto de atracción tanto
+                            para visitantes locales como extranjeros. Achocalla ofrece una experiencia única para los
+                            amantes del turismo rural, donde se puede disfrutar de actividades al aire libre como
+                            caminatas, paseos a caballo y picnics en un entorno sereno y alejado del ruido urbano.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sajama -->
+            <div class="carousel-item">
+                <div class="position-relative text-center">
+                    <img src="https://boliviamia.net/Images/Tourpics/Sajama200.jpg" class="d-block w-100 rounded"
+                        alt="Sajama">
+                    <div class="carousel-caption">
+                        <h3 class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Sajama</h3>
+                        <p class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Sajama, una joya natural en el
+                            altiplano boliviano, es hogar del majestuoso Parque Nacional Sajama, el área protegida más
+                            antigua de Bolivia. Este destino es famoso por sus imponentes paisajes volcánicos, dominados
+                            por el nevado Sajama, el pico más alto del país, que alcanza una altitud de 6.542 metros
+                            sobre el nivel del mar. Rodeado de extensas planicies altiplánicas, géiseres humeantes y
+                            aguas termales naturales, Sajama ofrece un entorno único donde la naturaleza muestra su
+                            esplendor en formas diversas.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sorata -->
+            <div class="carousel-item">
+                <div class="position-relative text-center">
+                    <img src="https://www.travels-bolivia.com/wp-content/uploads/2020/01/1-11.jpg"
+                        class="d-block w-100 rounded" alt="Sorata">
+                    <div class="carousel-caption">
+                        <h3 class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Sorata</h3>
+                        <p class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Sorata, un encantador pueblo
+                            colonial ubicado en los valles subandinos del departamento de La Paz, Bolivia, es conocido
+                            como la puerta de entrada al majestuoso macizo del Illampu, una de las montañas más icónicas
+                            de la Cordillera Real. Este destino es un paraíso para los amantes del senderismo y la
+                            naturaleza, ofreciendo impresionantes vistas panorámicas, cañones profundos y un clima
+                            cálido y agradable que contrasta con el frío altiplánico.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Copacabana -->
+            <div class="carousel-item">
+                <div class="position-relative text-center">
+                    <img src="https://boliviamia.net/Images/Attractionphotos/copacabana-01.jpg"
+                        class="d-block w-100 rounded" alt="Copacabana">
+                    <div class="carousel-caption">
+                        <h3 class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Copacabana</h3>
+                        <p class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Copacabana, una ciudad pintoresca
+                            situada a orillas del majestuoso lago Titicaca, es uno de los destinos más emblemáticos de
+                            Bolivia, conocido tanto por su riqueza cultural como por su belleza natural. Este lugar
+                            sagrado es hogar de la icónica Basílica de Nuestra Señora de Copacabana, un magnífico
+                            santuario colonial dedicado a la Virgen de Copacabana, la patrona de Bolivia, que atrae a
+                            miles de peregrinos cada año. La basílica, con su arquitectura blanca y detalles
+                            ornamentales, es el epicentro de profundas tradiciones religiosas y culturales.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Chulumani -->
+            <div class="carousel-item">
+                <div class="position-relative text-center">
+                    <img src="https://www.boliviaentusmanos.com/turismo/imagenes/chulumani1.jpg"
+                        class="d-block w-100 rounded" alt="Chulumani">
+                    <div class="carousel-caption">
+                        <h3 class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Chulumani</h3>
+                        <p class="text-white bg-dark bg-opacity-50 px-2 py-1 rounded">Chulumani, una apacible localidad
+                            ubicada en la región de los Yungas, Bolivia, es conocida por su exuberante paisaje tropical,
+                            su clima cálido y húmedo, y su rica producción agrícola, especialmente de café y coca,
+                            productos emblemáticos de la zona. Este pintoresco pueblo, rodeado de montañas cubiertas de
+                            vegetación densa, se encuentra a unas pocas horas de la ciudad de La Paz, lo que lo
+                            convierte en un destino perfecto para escapar del bullicio urbano y adentrarse en un entorno
+                            natural único.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#comunidadesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#comunidadesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+
+
+    <!-- Pie de página -->
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5>AndesArtBol</h5>
+                    <p>Obtén un 10% de descuento en tu primera compra.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Soporte</h5>
+                    <p>Av. Mariscal Santa Cruz, La Paz, Bolivia</p>
+                    <p>Email: soporte@andesartbol.com</p>
+                    <p>Tel: +591-2-244-0000</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Cuenta</h5>
+                    <a href="{{ url_for('login') }}">Iniciar Sesión</a><br>
+                    <a href="{{ url_for('registro') }}">Registrarse</a><br>
+                </div>
+                <div class="col-md-3">
+                    <h5>Redes Sociales</h5>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/andesartbol/" target="_blank"><i
+                                class="bi bi-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61566182557237" target="_blank"><i
+                                class="bi bi-facebook"></i></a>
+                        <a href="mailto:andesartbol@gmail.com"><i class="bi bi-envelope"></i></a>
+                        <a href="https://wa.me/59161170999" target="_blank"> <i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

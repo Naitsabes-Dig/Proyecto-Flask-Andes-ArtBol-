@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Fondo y superposición */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://png.pngtree.com/background/20231216/original/pngtree-handicrafts-in-the-andes-of-peru-textile-industry-travel-destinations-striped-picture-image_6852846.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 61, 52, 0.8);
+            z-index: -1;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        /* Estilo de las tarjetas */
+        .product-card {
+            background-color: #ffffff;
+            color: #1E3D34;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .product-card h2 {
+            font-size: 1.5rem;
+            color: #1E3D34;
+        }
+
+        .product-card p {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        /* Sección de comentarios */
+        .comment-list h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #1E3D34;
+        }
+
+        .comment-item {
+            border-top: 1px solid #ddd;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        .comment-item em {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            resize: none;
+        }
+
+        .comment-form button {
+            margin-top: 10px;
+            background-color: #1E3D34;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .comment-form button:hover {
+            background-color: #144528;
+        }
+
+        /* Botón flotante para regresar */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1E3D34;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #144528;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .product-card h2 {
+                font-size: 1.2rem;
+            }
+
+            .comment-list h3 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+
+    <!-- Botón para regresar -->
+    <a href="{{ url_for('dashboard') }}" class="back-button" title="Volver">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <!-- Título -->
+    <h1 class="text-center mb-4">Catálogo de Productos</h1>
+
+    <!-- Contenedor de productos -->
+    <div class="container">
+        <div class="row">
+            {% for producto in productos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="product-card">
+                    <h2>{{ producto.nombre }}</h2>
+                    {% if producto.imagen_url %}
+                    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}">
+                    {% endif %}
+                    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                    <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+                    <p><strong>Color:</strong> {{ producto.color }}</p>
+                    <p><strong>Dimensión:</strong> {{ producto.dimension }}</p>
+
+                    <!-- Comentarios -->
+                    <div class="comment-list">
+                        <h3><i class="fas fa-comments"></i> Comentarios</h3>
+                        <ul>
+                            {% for comentario in comentarios[producto.producto_id] %}
+                            <li class="comment-item">
+                                <p>{{ comentario.comentario }}</p>
+                                <p><em>{{ comentario.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</em></p>
+                            </li>
+                            {% else %}
+                            <li class="comment-item">No hay comentarios para este producto.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Formulario de comentarios -->
+                    <div class="comment-form">
+                        <h4><i class="fas fa-pen"></i> Deja tu comentario:</h4>
+                        <form action="{{ url_for('agregar_comentario', producto_id=producto.producto_id) }}" method="post">
+                            <textarea name="comentario" placeholder="Escribe tu comentario aquí..." rows="3"
+                                required></textarea>
+                            <button type="submit"><i class="fas fa-paper-plane"></i> Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

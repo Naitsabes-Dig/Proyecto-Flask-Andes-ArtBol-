@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código de Recuperación</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #1E3D34;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .codigo {
+            text-align: center;
+            background-color: #1E3D34;
+            color: white;
+            padding: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .logo img {
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .footer {
+            color: #899B9F;
+            font-size: 0.875rem;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .codigo {
+                font-size: 1.3rem;
+                padding: 12px;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+
+            .logo img {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Recuperación de Contraseña</h2>
+        <p>Hola,</p>
+        <p>Has solicitado recuperar tu contraseña. Usa el siguiente código para continuar con el proceso:</p>
+        <div class="codigo">{{ codigo }}</div>
+        <p>Si no solicitaste esta acción, ignora este correo.</p>
+        <div class="logo">
+            <img src="https://drive.google.com/uc?export=view&id=1BbNWXkB98noOjxwobMuMYAVk4QvUYYZz" alt="AndesArtBol">
+        </div>
+        <p>Gracias por confiar en <span style="color: #1E3D34; font-weight: bold;">AndesArtBol</span>.</p>
+        <div class="footer">
+            Este correo fue generado automáticamente. Por favor, no respondas a este mensaje.
+        </div>
+    </div>
+</body>
+</html>

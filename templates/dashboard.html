@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --primary-color: #1e3d34;
+            --secondary-color: #6c757d;
+            --white-color: #ffffffa8;
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+            --btn-hover-dark: #184b3f;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--secondary-color);
+            background-image: url('https://png.pngtree.com/background/20231216/original/pngtree-handicrafts-in-the-andes-of-peru-textile-industry-travel-destinations-striped-picture-image_6852846.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .dashboard-container {
+            padding: 2rem;
+            background-color: var(--white-color);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px var(--shadow-medium);
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .dashboard-header img {
+            max-width: 120px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-header img:hover {
+            transform: scale(1.1);
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .btn-custom {
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-custom:hover {
+            background-color: var(--btn-hover-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow-medium);
+        }
+
+        .canvas-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            width: 100%;
+            /* Asegura que ocupe todo el ancho posible */
+            height: 400px;
+            /* Ajusta la altura de los gráficos */
+        }
+
+
+        .canvas-container h6 {
+            text-align: center;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header text-center">
+            <img src="/static/CSS/imagenes/Logo.png" alt="Logo">
+            <h1>Bienvenido, {{ nombre|escape }}</h1>
+            <p>Este es tu dashboard, donde puedes gestionar todas tus opciones y funciones personalizadas.</p>
+            {% if is_admin %}
+            <p>Eres administrador.</p>
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-center btn-group mb-4">
+            <a href="/perfil" class="btn btn-custom m-2">PERFIL</a>
+            <a href="{{ url_for('dash') }}" class="btn btn-custom m-2">DASH</a>
+            {% if is_cliente %}
+            <a href="{{ url_for('carritos') }}" class="btn btn-custom m-2">CARRITO</a>
+            <a href="{{ url_for('delivery') }}" class="btn btn-custom m-2">SEGUIR ENVIO</a>
+            <a href="{{ url_for('historial_envios') }}" class="btn btn-custom m-2">COMPRAS</a>
+            <a href="/catalogo" class="btn btn-custom m-2">CATÁLOGO</a>
+            {% endif %}
+            {% if is_artesano %}
+            <a href="{{ url_for('agregar_producto') }}" class="btn btn-custom m-2">AGREGAR PRODUCTOS</a>
+            <a href="{{ url_for('productos_bajos') }}" class="btn btn-custom m-2">PRODUCTOS BAJOS</a>
+            <a href="/catalogo" class="btn btn-custom m-2">CATÁLOGO</a>
+            {% endif %}
+            {% if is_delivery %}
+            <a href="{{ url_for('confirmar_delivery') }}" class="btn btn-custom m-2">CONFIRMAR PEDIDOS</a>
+            <a href="{{ url_for('historial_envios_delivery') }}" class="btn btn-custom m-2">HISTORIAL ENTREGA</a>
+            {% endif %}
+            {% if is_admin %}
+            <a href="{{ url_for('admin') }}" class="btn btn-custom m-2">ADMINISTRAR VENDEDORES</a>
+            <a href="{{ url_for('mostrar_reclamos') }}" class="btn btn-custom m-2">RECLAMOS</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-custom m-2">CERRAR SESIÓN</a>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="canvas-container">
+                    <h6>Productos menos vendidos</h6>
+                    <canvas id="graficoMenosVendidos"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="canvas-container">
+                    <h6>Productos más vendidos</h6>
+                    <canvas id="graficoMasVendidos"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="canvas-container">
+                    <h6>Comunidades con más usuarios</h6>
+                    <canvas id="graficoComunidades"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const data = JSON.parse('{{ data|safe }}');
+
+        const ctxMasVendidos = document.getElementById('graficoMasVendidos').getContext('2d');
+        new Chart(ctxMasVendidos, {
+            type: 'bar',
+            data: {
+                labels: data.productos_mas_vendidos.map(p => p.nombre),
+                datasets: [{
+                    label: 'Cantidad en Stock',
+                    data: data.productos_mas_vendidos.map(p => p.stock),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const ctxMenosVendidos = document.getElementById('graficoMenosVendidos').getContext('2d');
+        new Chart(ctxMenosVendidos, {
+            type: 'line',
+            data: {
+                labels: data.productos_menos_vendidos.map(p => p.nombre),
+                datasets: [{
+                    label: 'Cantidad en Stock',
+                    data: data.productos_menos_vendidos.map(p => p.stock),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const ctxComunidades = document.getElementById('graficoComunidades').getContext('2d');
+        const comunidadesData = {
+            labels: data.comunidades_mas_usuarios.map(c => c.nombre),
+            datasets: [{
+                label: 'Cantidad de Usuarios',
+                data: data.comunidades_mas_usuarios.map(c => c.cantidad),
+                backgroundColor: [
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)'
+                ], // Puedes añadir más colores aquí si tienes más comunidades
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ], // Correspondiente a los colores de los bordes
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(ctxComunidades, {
+            type: 'doughnut',  // Cambiar a tipo 'doughnut'
+            data: comunidadesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' usuarios';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

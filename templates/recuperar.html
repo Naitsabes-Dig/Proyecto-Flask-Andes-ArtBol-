@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e8f0fe;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #1E3D34;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            text-align: center;
+            padding: 25px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #1E3D34;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #2B4B43;
+        }
+
+        .form-control {
+            border-color: #1E3D34;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .form-group label {
+            color: #1E3D34;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .container {
+            margin-top: 10%;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .text-muted {
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: center;
+            color: #555;
+        }
+
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            width: 300px;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .card-header {
+                font-size: 20px;
+                padding: 20px;
+            }
+
+            .btn-primary {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            .form-control {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-message">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        Recuperar Contraseña
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/recuperar">
+                            <div class="form-group">
+                                <label for="correo">Correo electrónico</label>
+                                <input type="email" class="form-control" id="correo" name="correo"
+                                    placeholder="Introduce tu correo" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Enviar Código</button>
+                        </form>
+                    </div>
+                    <div class="text-muted">Recibirás un correo con un código para restablecer tu contraseña.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (Popper.js and jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <title>Administrar Administradores - AndesArtBol</title>
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Estilos generales */
+        body {
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        h1 {
+            color: #1E3D34;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        /* Botón de volver */
+        .btn-back {
+            color: #ffffff;
+            background-color: #1E3D34;
+            border: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #2A5D4A;
+            transform: scale(1.05);
+        }
+
+        .btn-back i {
+            margin-right: 8px;
+        }
+
+        /* Contenedor de tabla */
+        .table-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* Tabla */
+        .table th {
+            background-color: #1E3D34;
+            color: #ffffff;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .table td, .table th {
+            padding: 12px;
+            text-align: center;
+        }
+
+        /* Botones de acción */
+        .btn-action {
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .btn-success {
+            background-color: #1E3D34;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-success:hover {
+            background-color: #2A5D4A;
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background-color: #8B0000;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: #B22222;
+            transform: scale(1.05);
+        }
+
+        /* Listas de aceptados y cancelados */
+        .list-group-item {
+            background-color: #f8f9fa;
+            border-color: #e0e0e0;
+            font-size: 1rem;
+        }
+
+        h3 {
+            color: #1E3D34;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn-action {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .table-container {
+                padding: 15px;
+            }
+
+            .table th, .table td {
+                font-size: 0.85rem;
+            }
+
+            .list-group-item {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .btn-action {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+
+            .list-group-item {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Botón para volver -->
+        <div class="text-center mb-4">
+            <a href="{{ url_for('dashboard') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+
+        <!-- Título -->
+        <h1>Administrar Artesanos</h1>
+
+        <!-- Tabla de usuarios -->
+        <div class="table-container table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario[0] }}</td>
+                            <td>{{ usuario[1] }}</td>
+                            <td>{{ usuario[2] }}</td>
+                            <td>
+                                <form action="{{ url_for('aceptar_admin', usuario_id=usuario[0]) }}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-success btn-action">Aceptar</button>
+                                </form>
+                                <form action="{{ url_for('cancelar_admin', usuario_id=usuario[0]) }}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-action">Cancelar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Listas de aceptados y cancelados -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <h3>Artesanos Aceptados</h3>
+                <ul class="list-group">
+                    {% for aceptado in aceptados %}
+                        <li class="list-group-item">{{ aceptado[1] }} ({{ aceptado[2] }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6 mb-4">
+                <h3>Artesanos Cancelados</h3>
+                <ul class="list-group">
+                    {% for cancelado in cancelados %}
+                        <li class="list-group-item">{{ cancelado[1] }} ({{ cancelado[2] }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Envíos</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-image: url('https://machupicchuviajesperu.com/wp-content/uploads/2024/04/artesanias-peruanas.jpg');
+            background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+            background-position: center; /* Centra la imagen */
+            background-attachment: fixed; /* Hace que la imagen no se mueva al hacer scroll */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        h2 {
+            color: #1E3D34;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8f9fa;
+        }
+
+        .table thead {
+            background-color: #1E3D34;
+            color: #ffffff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: #1E3D34;
+            border-color: #1E3D34;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .btn-primary:hover {
+            background-color: #16472a;
+            border-color: #16472a;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            border-radius: 6px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .btn-custom {
+            width: 100%;
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        hr {
+            border-top: 2px solid #1E3D34;
+            opacity: 1;
+            margin-bottom: 20px;
+        }
+
+        .text-muted {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .btn-custom {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .table th, 
+            .table td {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Historial de Envíos</h2>
+        <hr>
+
+        <!-- Tabla responsiva -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID de Envío</th>
+                        <th>Ubicación</th>
+                        <th>Fecha de Envío</th>
+                        <th>Confirmación de Entrega</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for envio in envios %}
+                    <tr>
+                        <td>{{ envio[0] }}</td>
+                        <td>{{ envio[1] }}</td>
+                        <td>{{ envio[3] }}</td>
+                        <td>
+                            <span class="text-muted">
+                                {{ 'Sí' if envio[6] else 'No' }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('confirmar_entrega', envio_id=envio[0]) }}" class="btn btn-primary">
+                                Confirmar Entrega
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-custom mt-4">Volver al Inicio</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

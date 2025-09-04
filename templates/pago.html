@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura - Pago</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .invoice {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto;
+            width: 150px;
+        }
+
+        h1 {
+            color: #1E3D34;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #1E3D34;
+            margin-top: 20px;
+            border-bottom: 2px solid #1E3D34;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+
+        .invoice-details p {
+            font-size: 1rem;
+            margin: 8px 0;
+            color: #555;
+        }
+
+        /* Total y botones */
+        .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+            color: #1E3D34;
+        }
+
+        .pay-button,
+        .back-button {
+            display: inline-block;
+            text-align: center;
+            padding: 12px 25px;
+            margin-top: 20px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .pay-button {
+            background-color: #1E3D34;
+            margin-right: 10px;
+        }
+
+        .back-button {
+            background-color: #555;
+        }
+
+        .pay-button:hover {
+            background-color: #155f46;
+        }
+
+        .back-button:hover {
+            background-color: #333;
+        }
+
+        /* Estilos para métodos de pago */
+        #payment-method {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            background-color: #f9f9f9;
+        }
+
+        #payment-details>div {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: none;
+            background-color: #f9f9f9;
+        }
+
+        #payment-details h3 {
+            margin-top: 0;
+            color: #1E3D34;
+        }
+
+        #payment-details input[type="text"] {
+            width: calc(50% - 10px);
+            padding: 12px;
+            margin: 8px 5px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        #payment-details button {
+            background-color: #1E3D34;
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #payment-details button:hover {
+            background-color: #155f46;
+        }
+
+        #payment-details img {
+            width: 150px;
+            display: block;
+            margin: 15px auto;
+        }
+
+        #invoice-items-body {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        /* Estilos para las celdas de la tabla */
+        #invoice-items-body td,
+        #invoice-items-body th {
+            padding: 12px;
+            text-align: left;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        /* Cabecera de la tabla */
+        #invoice-items-body th {
+            background-color: #1E3D34;
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Estilo de las filas de la tabla */
+        #invoice-items-body tr:nth-child(even) td {
+            background-color: #f9f9f9;
+            /* Fondo gris claro para filas pares */
+        }
+
+        #invoice-items-body tr:nth-child(odd) td {
+            background-color: #fff;
+            /* Fondo blanco para filas impares */
+        }
+
+        #invoice-items-body tr:hover td {
+            background-color: #f1f1f1;
+            /* Efecto hover en filas */
+        }
+
+        /* Estilo para la celda de total */
+        #invoice-items-body td:last-child {
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Mensaje cuando no hay productos */
+        #invoice-items-body td[colspan="4"] {
+            text-align: center;
+            background-color: #f9f9f9;
+            font-size: 1.2rem;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice">
+        <img src="/static/CSS/imagenes/Logo.png" alt="Logo de la página" class="logo">
+        <h1>Factura de Pago</h1>
+        <h2>Detalles del Pedido</h2>
+        <div class="invoice-details">
+            <p><strong>Fecha:</strong> <span id="date"></span></p>
+            <p><strong>Nombre del Cliente:</strong> {{ nombre|escape }}</p>
+            <p><strong>Correo del Cliente:</strong> {{ correo_cliente|escape }}</p> <!-- Mostrar correo -->
+        </div>
+
+
+        <table id="invoice-items-body">
+            {% if productos_carrito %}
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_carrito %}
+                <tr>
+                    <td>{{ producto['name'] }}</td>
+                    <td>{{ producto['cantidad'] }}</td>
+                    <td>Bs. {{ "%.2f"|format(producto['price']) }}</td>
+                    <td>Bs. {{ "%.2f"|format(producto['price'] * producto['cantidad']) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% else %}
+            <tr>
+                <td colspan="4">No hay productos en el carrito.</td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <p class="total">Total a Pagar: Bs. {{ "%.2f"|format(total) }}</p>
+
+        <h2>Método de Pago</h2>
+        <form method="POST" action="{{ url_for('pago') }}" id="payment-form" onsubmit="submitForm(event)">
+            <select name="payment-method" id="payment-method" onchange="showPaymentOption(this.value)" required>
+                <option value="">Seleccione una opción</option>
+                <option value="transferencia">Transferencia Bancaria</option>
+                <option value="qr">Código QR</option>
+            </select>
+
+            <div id="payment-details">
+                <div id="bank-transfer-details" style="display:none;">
+                    <h3>Transferencia Bancaria</h3>
+                    <p>Realiza tu transferencia a la siguiente cuenta:</p>
+                    <p><strong>Banco:</strong> Banco UNION</p>
+                    <p><strong>Cuenta:</strong> 100084621951</p>
+                    <p><strong>Titular:</strong> ANDES ARTBOL</p>
+                </div>
+
+                <div id="qr-details" style="display:none;">
+                    <h3>Código QR</h3>
+                    <p>Escanea el siguiente código QR para completar el pago:</p>
+                    <img src="/static/CSS/imagenes/qr.png" alt="Código QR">
+                </div>
+            </div>
+
+            <input type="hidden" name="pedido_id" value="{{ pedido_id }}">
+            <button type="submit" class="pay-button">Finalizar Pago</button>
+            <a class="back-button" href="{{ url_for('carritos') }}" onclick="goBack()">Volver</a>
+        </form>
+    </div>
+
+    <script>
+        // Actualizar la fecha
+        document.getElementById('date').textContent = new Date().toLocaleDateString();
+
+        // Mostrar detalles de pago según el método seleccionado
+        function showPaymentOption(option) {
+            document.getElementById('bank-transfer-details').style.display = (option === 'transferencia') ? 'block' : 'none';
+            document.getElementById('qr-details').style.display = (option === 'qr') ? 'block' : 'none';
+        }
+
+        // Función para volver a la página anterior
+        function goBack() {
+            window.history.back();
+        }
+
+        function submitForm(event) {
+            event.preventDefault(); // Evita que se envíe el formulario de forma estándar
+
+            // Obtener los datos del formulario
+            const paymentMethod = document.getElementById('payment-method').value;
+            const productos = JSON.parse('{{ productos_carrito|tojson }}');
+            const total = '{{ total|tojson }}';
+            const usuarioId = '{{ session["usuario_id"]|default("null")|tojson }}'; // Lee el usuario_id desde la sesión
+            const nombre = "{{ nombre|escape }}"; // Asumiendo que el nombre ya está disponible en el template
+            const correo = "{{ correo_cliente|escape }}"; // Asegúrate de pasar el correo del cliente
+
+            // Validar que todos los campos necesarios estén presentes
+            if (!nombre || !correo || productos.length === 0) {
+                alert("Faltan datos importantes. Por favor, revisa el formulario.");
+                console.error("Datos incompletos:", { nombre, correo, productos });
+                return;
+            }
+
+            if (!usuarioId || usuarioId === "null") {
+                alert("Error: No se ha encontrado el usuario. Inicia sesión nuevamente.");
+                console.error("Usuario no autenticado:", { usuarioId });
+                return;
+            }
+
+            // Crear el objeto con los datos para el pago
+            const formData = {
+                cart: productos,
+                payment_method: paymentMethod,
+                usuario_id: usuarioId, // Incluimos el ID del usuario
+            };
+
+            // Mostrar los datos enviados al backend para depuración
+            console.log("Datos para pago:", formData);
+
+            // Enviar la solicitud de pago
+            fetch("{{ url_for('pago') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData), // Convertimos los datos a JSON
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Llamar a la ruta para enviar la factura
+                        const facturaData = {
+                            nombre: nombre,
+                            correo: correo,
+                            cart: productos,
+                            usuario_id: usuarioId, // Asegúrate de incluir usuario_id aquí también
+                        };
+
+                        // Mostrar en consola los datos que se enviarán
+                        console.log("Datos para enviar factura:", facturaData);
+
+                        return fetch("{{ url_for('enviar_factura') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(facturaData),
+                        });
+                    } else {
+                        throw new Error("Error en el proceso de pago: " + (data.message || "Datos inválidos."));
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Factura enviada correctamente.');
+                        window.location.href = "{{ url_for('manejar_pedido') }}"; // Redirige al pedido
+                    } else {
+                        alert('Hubo un error al enviar la factura: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en el proceso:", error);
+                    alert('Hubo un problema. Por favor, intenta nuevamente.');
+                });
+        }
+
+    </script>
+</body>
+
+</html>

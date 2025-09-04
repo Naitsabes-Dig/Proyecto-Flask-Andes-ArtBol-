@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Envíos</title>
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos personalizados */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1,
+        h2 {
+            font-weight: 700;
+            color: #1E3D34;
+            text-align: center;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            font-weight: 600;
+            color: #fff;
+            background-color: #1E3D34;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background-color: #16472a;
+            color: #fff;
+        }
+
+        .table {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .table th {
+            background-color: #1E3D34;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9fbfd;
+        }
+
+        .rating-input,
+        .form-control {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .btn {
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-success {
+            background-color: #48C774;
+            border-color: #48C774;
+        }
+
+        .btn-danger {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+        }
+
+        .btn-warning {
+            background-color: #FFC107;
+            border-color: #FFC107;
+            color: #fff;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .rating-input,
+            .form-control {
+                max-width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="javascript:history.back()" class="btn btn-back mb-3">Volver</a>
+    <h1>Historial de Envíos</h1>
+
+    <!-- Envíos Pendientes -->
+    <h2>Envíos Pendientes</h2>
+    {% if envios_pendientes %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Envío</th>
+                    <th>Ubicación</th>
+                    <th>Número de Contacto</th>
+                    <th>Tiempo Estimado</th>
+                    <th>Fecha de Envío</th>
+                    <th>Tiempo Restante</th>
+                    <th>Puntuación</th>
+                    <th>Reseña</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for envio in envios_pendientes %}
+                <tr>
+                    <td>{{ envio[0] }}</td>
+                    <td>{{ envio[1] }}</td>
+                    <td>{{ envio[2] }}</td>
+                    <td>{{ envio[3] }} minutos</td>
+                    <td>{{ envio[4] }}</td>
+                    <td id="timer_{{ envio[0] }}">72:00:00</td>
+                    <td><input type="number" min="1" max="5" class="form-control rating-input"
+                            id="puntuacion_{{ envio[0] }}" placeholder="1-5"></td>
+                    <td><input type="text" class="form-control" id="resena_{{ envio[0] }}"
+                            placeholder="Escribe tu reseña"></td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="actualizarEstado('{{ envio[0] }}', 'Llegó')"
+                            id="llego_{{ envio[0] }}">Llegó</button>
+                        <button class="btn btn-danger btn-sm" onclick="actualizarEstado('{{ envio[0] }}', 'No Llegó')"
+                            id="no_llego_{{ envio[0] }}">No Llegó</button>
+                        <a href="{{ url_for('reclamar', envio_id=envio[0]) }}" class="btn btn-warning btn-sm">Reclamar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted text-center">No hay envíos pendientes.</p>
+    {% endif %}
+
+    <!-- Envíos que Llegaron -->
+    <h2>Envíos que Llegaron</h2>
+    {% if envios_llego %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Envío</th>
+                    <th>Ubicación</th>
+                    <th>Número de Contacto</th>
+                    <th>Tiempo Estimado</th>
+                    <th>Fecha de Envío</th>
+                    <th>Estado</th>
+                    <th>Puntuación</th>
+                    <th>Reseña</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for envio in envios_llego %}
+                <tr>
+                    <td>{{ envio[0] }}</td>
+                    <td>{{ envio[1] }}</td>
+                    <td>{{ envio[2] }}</td>
+                    <td>{{ envio[3] }} minutos</td>
+                    <td>{{ envio[4] }}</td>
+                    <td>{{ envio[5] }}</td>
+                    <td>{{ envio[6] }}</td>
+                    <td>{{ envio[7] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted text-center">No hay envíos que llegaron.</p>
+    {% endif %}
+
+    <!-- Envíos que No Llegaron -->
+    <h2>Envíos que No Llegaron</h2>
+    {% if envios_no_llego %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Envío</th>
+                    <th>Ubicación</th>
+                    <th>Número de Contacto</th>
+                    <th>Tiempo Estimado</th>
+                    <th>Fecha de Envío</th>
+                    <th>Estado</th>
+                    <th>Puntuación</th>
+                    <th>Reseña</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for envio in envios_no_llego %}
+                <tr>
+                    <td>{{ envio[0] }}</td>
+                    <td>{{ envio[1] }}</td>
+                    <td>{{ envio[2] }}</td>
+                    <td>{{ envio[3] }} minutos</td>
+                    <td>{{ envio[4] }}</td>
+                    <td>{{ envio[5] }}</td>
+                    <td>{{ envio[6] }}</td>
+                    <td>{{ envio[7] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted text-center">No hay envíos que no llegaron.</p>
+    {% endif %}
+
+    <!-- Scripts de JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function actualizarEstado(envioId, estado) {
+            const puntuacion = document.getElementById('puntuacion_' + envioId).value;
+            const resena = document.getElementById('resena_' + envioId).value;
+
+            if (!puntuacion || puntuacion < 1 || puntuacion > 5) {
+                alert("Por favor, ingresa una puntuación válida entre 1 y 5.");
+                return;
+            }
+            if (!resena) {
+                alert("Por favor, ingresa una reseña.");
+                return;
+            }
+
+            fetch('/actualizar_estado_envios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ envioId, estado, puntuacion, resena })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Hubo un problema al actualizar el estado.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+
+        function startCountdown(envioId, startDate) {
+            const countdownElement = document.getElementById("timer_" + envioId);
+            const btnLlegada = document.getElementById("llego_" + envioId);
+            const btnNoLlegada = document.getElementById("no_llego_" + envioId);
+
+            const endTime = new Date(startDate).getTime() + 72 * 60 * 60 * 1000;
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownElement.innerHTML = `${hours}:${minutes}:${seconds}`;
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    countdownElement.innerHTML = "Expirado";
+                    btnLlegada.disabled = true;
+                    btnNoLlegada.disabled = true;
+                }
+            }, 1000);
+        }
+
+        const enviosPendientes = JSON.parse('{{ envios_pendientes | tojson | safe }}');
+        if (enviosPendientes && enviosPendientes.length > 0) {
+            enviosPendientes.forEach(envio => startCountdown(envio[0], envio[4]));
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/CSS/imagenes/peque.png" type="image/x-icon">
+    <title>Realizar Pedido</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            color: #1E3D34;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        #map {
+            height: 300px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .btn-primary {
+            background-color: #1E3D34;
+            border-color: #1E3D34;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #16472a;
+            border-color: #16472a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+
+            #map {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Datos de Envío</h1>
+        <form method="post">
+            <div class="form-group mb-3">
+                <label for="ubicacion">Ubicación:</label>
+                <input type="text" class="form-control" name="ubicacion" id="ubicacion" required placeholder="Selecciona en el mapa tu ubicación exacta">
+            </div>
+
+            <div id="map"></div>
+
+            <div class="form-group mb-3">
+                <label for="numero_contacto">Número de Contacto:</label>
+                <input type="text" class="form-control" name="numero_contacto" id="numero_contacto" required placeholder="Ej. +591 12345678">
+            </div>
+
+            <input type="hidden" name="envio_id" value="{{ envio_id }}">
+            <input type="hidden" name="pedido_id" value="algún_valor_generado">
+            <input type="hidden" name="direccion_entrega_id" value="algún_valor_generado">
+
+            <button type="submit" class="btn btn-primary btn-block">Enviar Pedido</button>
+        </form>
+    </div>
+
+    <script>
+        var map;
+        var geocoder;
+        var marker;
+
+        function initMap() {
+            var defaultLocation = {lat: -16.500000, lng: -68.150002};
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: defaultLocation,
+                zoom: 15
+            });
+
+            marker = new google.maps.Marker({
+                position: defaultLocation,
+                map: map,
+                draggable: true
+            });
+
+            geocoder = new google.maps.Geocoder();
+
+            marker.addListener('dragend', function() {
+                geocodePosition(marker.getPosition());
+            });
+
+            map.addListener('click', function(event) {
+                marker.setPosition(event.latLng);
+                geocodePosition(marker.getPosition());
+            });
+        }
+
+        function geocodePosition(pos) {
+            geocoder.geocode({ location: pos }, function(responses) {
+                if (responses && responses.length > 0) {
+                    document.getElementById('ubicacion').value = responses[0].formatted_address;
+                } else {
+                    document.getElementById('ubicacion').value = 'No se pudo determinar la dirección.';
+                }
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVl-7DLtNNp03p-BF7YSo6QOiomXSlPHc&callback=initMap"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
